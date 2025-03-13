@@ -75,10 +75,10 @@ def promotion_image():
                     </html>"""
 
 
-@app.route('/astronaut_selection', methods=['POST', 'GET'])
+@app.route("/astronaut_selection", methods=["POST", "GET"])
 def selection():
-    if request.method == 'GET':
-        return f'''<!doctype html>
+    if request.method == "GET":
+        return f"""<!doctype html>
                         <html lang="en">
                           <head>
                             <meta charset="utf-8">
@@ -187,10 +187,94 @@ def selection():
                                 </form>
                             </div>
                           </body>
-                        </html>'''
-    elif request.method == 'POST':
+                        </html>"""
+    elif request.method == "POST":
         return "Форма отправлена"
 
+
+@app.route("/choice/<planet_name>")
+def choice(planet_name):
+    types_of_styles = ["alert-success", "alert-dark", "alert-danger"]
+    planets_description = {
+        "марс": [
+            ("Эта планета близка к Земле", 4),
+            ("На ней много ресурсов", 1),
+            ("На ней есть вода и атмосфера", 1),
+            ("На ней есть небольшое магнитное поле", 3),
+            ("Наконец, она просто красива!", 0),
+        ],
+        "земля": [
+            ("Эта наш дом!", 1),
+            ("На ней очень много ресурсов", 1),
+            ("На ней есть много воды и атмосферы", 1),
+            ("На ней есть магнитное поле", 1),
+            ("Земля не повтарима!", 1),
+        ],
+        "луна": [
+            ("Эта планета близка к Земле", 1),
+            ("На ней мало ресурсов", 3),
+            ("На ней почти нет атмосферы и нет воды", 3),
+            ("На ней есть небольшое магнитное поле", 2),
+            ("Она усыпана кратерами", 2),
+        ],
+        "юпитер": [
+            ("Эта планета близка к Марсу", 2),
+            ("Он просто газовый гигант", 3),
+            ("На нём нет ничего", 3),
+            ("На ней есть магнитное поле", 2),
+            ("Наконец, он самый большой в солнечной системме!", 1),
+        ],
+        "меркурий": [
+            ("Эта планета близка к Венере", 2),
+            ("На нём не сильно много ресурсов", 2),
+            ("На нём совсем маленькая атмосфера", 3),
+            ("На ней есть небольшое магнитное поле", 2),
+            ("Наконец, он самый близкий к солнцу!", 1),
+        ],
+        "нептун": [
+            ("Эта планета близка к Урану", 2),
+            ("На нём очень холодно", 3),
+            ("На нём нет атмосферы", 3),
+            ("На ней есть небольшое магнитное поле", 2),
+            ("Наконец, он самый далёкий от солнца!", 2),
+        ],
+    }
+
+    if planet_name.lower() not in planets_description:
+        return f"<h2>По вашему выбору ({planet_name}) ничего не нашлось</h2>"
+
+    description = planets_description[planet_name.lower()]
+    styles = list(map(lambda x: types_of_styles[min(x[1] - 1, 2)], description))
+    return f"""<!doctype html>
+                    <html lang="en">
+                      <head>
+                        <meta charset="utf-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                        <link rel="stylesheet" 
+                        href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
+                        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" 
+                        crossorigin="anonymous">
+                        <title>Варианты выбора</title>
+                      </head>
+                      <body>
+                        <h1>Моё предложение: {planet_name}</h1>
+                        <div class="alert {styles[0]}" role="alert">
+                         <h5>{description[0][0]}</h5>
+                        </div>
+                        <div class="alert {styles[1]}" role="alert">
+                         <h5>{description[1][0]}</h5>
+                        </div>
+                        <div class="alert {styles[2]}" role="alert">
+                         <h5>{description[2][0]}</h5>
+                        </div>
+                        <div class="alert {styles[3]}" role="alert">
+                         <h5>{description[3][0]}</h5>
+                        </div>
+                        <div class="alert {styles[4]}" role="alert">
+                         <h5>{description[4][0]}</h5>
+                        </div>
+                      </body>
+                    </html>"""
 
 
 if __name__ == "__main__":
